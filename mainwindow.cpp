@@ -7,11 +7,26 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setup_menu_bar();
-    this->setGeometry(100, 100, 800, 600);
+    setup_header();
+    setup_options_panel();
+    load_settings();
 }
 
 MainWindow::~MainWindow()
 {
+    QSettings settings("SFinder", "sfinder");
+
+    settings.setValue("Window/x-position", this->x());
+    settings.setValue("Window/y-position", this->y());
+    settings.setValue("Window/widht", this->width());
+    settings.setValue("Window/height", this->height());
+
+    settings.setValue("Filters/Editable", m_editable_act->isChecked());
+    settings.setValue("Filters/Symbols/ascii", ui->ascii->isChecked());
+    settings.setValue("Filters/Symbols/unicode", ui->unicode->isChecked());
+/*    settings.setValue("Filters/Symbols/ascii", m_ascii_act->isChecked());
+    settings.setValue("Filters/Symbols/unicode", m_unicode_act->isChecked());
+*/
     delete ui;
 }
 
@@ -26,17 +41,17 @@ void MainWindow::setup_menu_bar()
     m_file_menu->addAction("Exit",   this, SLOT(exit()), Qt::CTRL + Qt::Key_Q);
 
     m_editable_act = m_options_menu->addAction("Editable",  this, SLOT(file_editable()), Qt::CTRL + Qt::Key_E);
-    m_options_menu->addSeparator();
+/*    m_options_menu->addSeparator();
     m_ascii_act = m_options_menu->addAction("ASCII",  this, SLOT(see_only_ascii()), Qt::CTRL + Qt::Key_A);
     m_unicode_act = m_options_menu->addAction("UNICODE",  this, SLOT(see_only_unicode()), Qt::CTRL + Qt::Key_U);
     m_options_menu->addSeparator();
-    m_min_string_length = m_options_menu->addAction("Minimum search length", this, SLOT(set_minimum_search_lenght()), Qt::CTRL + Qt::Key_M);
+    m_min_string_length = m_options_menu->addAction("String search length", this, SLOT(set_minimum_search_lenght()), Qt::CTRL + Qt::Key_M);
+*/
     m_editable_act->setCheckable(true);
-    m_editable_act->setChecked(false);
+/*
     m_ascii_act->setCheckable(true);
-    m_ascii_act->setChecked(true);
     m_unicode_act->setCheckable(true);
-    m_unicode_act->setChecked(true);
+*/
 
     ui->menubar->addMenu(m_file_menu);
     ui->menubar->addMenu(m_options_menu);
@@ -57,18 +72,21 @@ void MainWindow::open_file()
     }
     if(file_name==m_file_path)
     {
-        if(first_run)
+        if(m_first_run)
         {
-            first_run = false;
+            m_first_run = false;
+            reopen_file(file_name);
+            return;
         } else
         {
             reopen_file(file_name);
+            return;
         }
     } else if(m_file_path.size())
     {
-        if(first_run)
+        if(m_first_run)
         {
-           first_run = false;
+           m_first_run = false;
         }
     }
     m_last_path = QFileInfo(file_name).absolutePath();
@@ -79,9 +97,8 @@ void MainWindow::open_file()
 
 void MainWindow::open_file(const QString& file)
 {
-    if(!first_run)
+    if(!m_first_run)
     {
-        //ui->tableWidget->clear();
         QAbstractItemModel* const mdl = ui->tableWidget->model();
         mdl->removeRows(0,mdl->rowCount());
     }
@@ -110,7 +127,7 @@ void MainWindow::exit()
     QApplication::quit();
 }
 
-void MainWindow::file_editable()
+bool MainWindow::file_editable()
 {
 
 }
@@ -142,27 +159,12 @@ void MainWindow::read_file(const QString& file)
 
 void MainWindow::search_strings()
 {
-    if(!first_run)
-    {
-        ui->tableWidget->clear();
-    }
     find_ascii_strings();
     find_unicode_strings();
 }
 
-void MainWindow::set_minimum_search_lenght()
-{
-
-}
-
-void MainWindow::set_maximum_search_lenght()
-{
-
-}
-
 void MainWindow::find_ascii_strings()
 {
-    int row{0};
     bool b_in_string{false};
     QString current_str;
     m_min_string_len = 4;
@@ -196,7 +198,6 @@ void MainWindow::find_ascii_strings()
 
 void MainWindow::find_unicode_strings()
 {
-    int row{0};
     bool b_in_string{false};
     QString current_str;
     m_min_string_len = 4;
@@ -234,7 +235,7 @@ void MainWindow::find_unicode_strings()
     }
 }
 
-void MainWindow::print_string(int file_offset, string_type type, const QString& str)
+void MainWindow::print_string(int file_offset, m_string_type type, const QString& str)
 {
     int row = ui->tableWidget->rowCount();
 
@@ -243,4 +244,46 @@ void MainWindow::print_string(int file_offset, string_type type, const QString& 
     ui->tableWidget->setItem(row, 1, new QTableWidgetItem((type)?"U":"A"));
     ui->tableWidget->setItem(row,2,new QTableWidgetItem(str));
 
+}
+
+void MainWindow::load_settings()
+{
+    QSettings settings("SFinder", "sfinder");
+    this->setGeometry(settings.value("Window/x-position", 100).toInt(),
+                      settings.value("Window/y-position", 100).toInt(),
+                      settings.value("Window/widht", 800).toInt(),
+                      settings.value("Window/height", 600).toInt());
+    m_editable_act->setChecked(settings.value("Filters/Editable", false).toBool());
+    ui->ascii->setChecked(settings.value("Filters/Symbols/ascii", true).toBool());
+    ui->unicode->setChecked(settings.value("Filters/Symbols/unicode", true).toBool());
+/*    m_ascii_act->setChecked(settings.value("Filters/Symbols/ascii", true).toBool());
+    m_unicode_act->setChecked(settings.value("Filters/Symbols/unicode", true).toBool());
+*/
+}
+
+void MainWindow::setup_header()
+{
+    QTableWidget* tw = ui->tableWidget;
+
+    tw->setColumnCount(3);
+    QTableWidgetItem* item0 = new QTableWidgetItem();
+    tw->setHorizontalHeaderItem(0, item0);
+    QTableWidgetItem* item1 = new QTableWidgetItem();
+    tw->setHorizontalHeaderItem(1, item1);
+    QTableWidgetItem* item2 = new QTableWidgetItem();
+    tw->setHorizontalHeaderItem(2, item2);
+
+    tw->horizontalHeaderItem(0)->setTextAlignment(Qt::AlignCenter);
+    tw->horizontalHeaderItem(0)->setText("Offset");
+    tw->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignCenter);
+    tw->horizontalHeaderItem(1)->setText("Type");
+    tw->horizontalHeaderItem(2)->setTextAlignment(Qt::AlignCenter);
+    tw->horizontalHeaderItem(2)->setText("String");
+}
+
+void MainWindow::setup_options_panel()
+{
+    QLineEdit* le = ui->search_string_ledit;
+
+    le->setValidator(new QIntValidator(1, 999, this));
 }

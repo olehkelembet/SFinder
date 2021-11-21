@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QMessageBox>
+#include <QSettings>
+#include <QWidgetAction>
 #include <iostream>
 
 QT_BEGIN_NAMESPACE
@@ -27,11 +29,8 @@ private slots:
     void save_file();
     void save_to_file();
     void exit();
-    void file_editable();
     void see_only_ascii();
     void see_only_unicode();
-    void set_minimum_search_lenght();
-    void set_maximum_search_lenght();
 
 private:
     Ui::MainWindow *ui;
@@ -40,23 +39,28 @@ private:
     QMenu* m_file_menu;
     QMenu* m_options_menu;
     QAction* m_editable_act;
-    QAction* m_ascii_act;
+/*    QAction* m_ascii_act;
     QAction* m_unicode_act;
+*/
     QAction* m_min_string_length;
     QByteArray m_file_byte_array;
     QMap<uint32_t, QString> m_astrings;
     QMap<uint32_t, QString> m_ustrings;
     int m_min_string_len;
     int m_max_string_len;
-    enum string_type {STYPE_ASCII=0, STYPE_UNICODE};
-    bool first_run=true;
+    enum m_string_type {STYPE_ASCII=0, STYPE_UNICODE};
+    bool m_first_run=true;
 
     void setup_menu_bar();
     void read_file(const QString&);
     void search_strings();
     void find_ascii_strings();
     void find_unicode_strings();
-    void print_string(int file_offset, string_type type, const QString& str);
+    void print_string(int file_offset, m_string_type type, const QString& str);
     void reopen_file(const QString& file);
+    void load_settings();
+    void setup_header();
+    void setup_options_panel();
+    bool file_editable();
 };
 #endif // MAINWINDOW_H

@@ -36,7 +36,7 @@ void MainWindow::setup_menu_bar()
     m_options_menu = new QMenu("Options");
 
     m_file_menu->addAction("Open file",  this, SLOT(open_file()), Qt::CTRL + Qt::Key_O);
-    m_file_menu->addAction("Save file",   this, SLOT(save_file()), Qt::CTRL + Qt::Key_S);
+    //m_file_menu->addAction("Save file",   this, SLOT(save_file()), Qt::CTRL + Qt::Key_S);
     m_file_menu->addAction("Save strings to file",   this, SLOT(save_to_file()), Qt::CTRL + Qt::Key_F);
     m_file_menu->addAction("Exit",   this, SLOT(exit()), Qt::CTRL + Qt::Key_Q);
 
@@ -100,7 +100,7 @@ void MainWindow::open_file(const QString& file)
     if(!m_first_run)
     {
         QAbstractItemModel* const mdl = ui->tableWidget->model();
-        mdl->removeRows(0,mdl->rowCount());
+        mdl->removeRows(0, mdl->rowCount());
     }
     read_file(file);
     search_strings();
@@ -112,14 +112,43 @@ void MainWindow::reopen_file(const QString& file)
     open_file(file);
 }
 
-void MainWindow::save_file()
-{
-
-}
-
 void MainWindow::save_to_file()
 {
+    //check is there any data(strings) already
+    if(m_astrings.isEmpty() && m_ustrings.isEmpty())
+    {
+      QMessageBox::warning(this, tr("Can't save !"), tr("There is no strings to save."));
+      return;
+    }
+    QString file_name = QFileDialog::getSaveFileName(this,
+                                            tr("Save strings to file"), "", tr("Text files (*.txt)"));
 
+    if (file_name.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+        QFile file(file_name);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QMessageBox::information(this, tr("Unable to open file"),
+            file.errorString());
+            return;
+        }
+        QTextStream out(&file);
+        foreach(QString sa, m_astrings.values())
+        {
+            //qDebug() << s;
+          out << sa << "\n";
+        }
+        foreach(QString su, m_ustrings.values())
+        {
+            //qDebug() << s;
+          out << su << "\n";
+        }
+        file.close();
+    }
 }
 
 void MainWindow::exit()
@@ -129,7 +158,31 @@ void MainWindow::exit()
 
 bool MainWindow::file_editable()
 {
+  /*
+  Can be used QFileDevice::permissions() considering differences in the platforms supported by Qt and NTFS file system
+  */
+#ifdef Q_OS_WINDOWS
+  uint32_t attributes = GetFileAttributes(m_file_path.toStdStirng.c_str());
+  if (attributes == INVALID_FILE_ATTRIBUTES)
+  {
+    return false;
+  }
+  if (attributes & FILE_ATTRIBUTE_READONLY)
+  {
+    return true;
+  }
+#endif
 
+#ifdef Q_OS_LINUX
+  if(access(m_file_path.toStdString().c_str(), R_OK) != -1)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+#endif
 }
 
 void MainWindow::see_only_ascii()

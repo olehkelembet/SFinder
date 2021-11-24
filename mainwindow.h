@@ -10,6 +10,15 @@
 #include <QWidgetAction>
 #include <iostream>
 
+#ifdef Q_OS_LINUX
+  #include <unistd.h>
+#endif
+#ifdef Q_OS_WINDOWS
+  #include <fileapi.h>
+  #include <windows.h>
+#endif
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -26,7 +35,6 @@ private slots:
     void on_pushButton_clicked();
     void open_file();
     void open_file(const QString& file);
-    void save_file();
     void save_to_file();
     void exit();
     void see_only_ascii();

@@ -6,176 +6,78 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>811</width>
+    <height>493</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>10</y>
-      <width>51</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Open</string>
-    </property>
-   </widget>
-   <widget class="QTableWidget" name="tableWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>631</width>
-      <height>321</height>
-     </rect>
-    </property>
-    <property name="alternatingRowColors">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>571</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="Filters">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>631</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Plain</enum>
-    </property>
-    <property name="lineWidth">
-     <number>1</number>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="f_permission">
-    <property name="geometry">
-     <rect>
-      <x>400</x>
-      <y>50</y>
-      <width>231</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="search_string_ledit">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>50</y>
-      <width>31</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>23</x>
-      <y>50</y>
-      <width>292</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QCheckBox" name="ascii">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>ASCII</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="unicode">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>UNICODE</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="search_string_lbl">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>String search length</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>Open</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="FiltersWindow" name="filtersWnd" native="true"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>811</width>
      <height>20</height>
     </rect>
    </property>
@@ -197,6 +99,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FiltersWindow</class>
+   <extends>QWidget</extends>
+   <header location="global">filterswindow.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -1,3 +1,4 @@
 # SFinder
 
-Program for finding strings in files
+Program for finding strings in files.
+Uses QT.

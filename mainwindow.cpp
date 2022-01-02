@@ -347,3 +347,8 @@ void MainWindow::handleFilterEvent()
         set_min_stirng_search_len(ui->filtersWnd->getStringSearchLen());
     }
 }
+
+void MainWindow::save_file()
+{
+
+}

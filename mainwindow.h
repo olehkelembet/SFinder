@@ -35,6 +35,7 @@ private slots:
     void on_pushButton_clicked();
     void open_file();
     void open_file(const QString& file);
+    void save_file();
     void save_to_file();
     void exit();
     void see_only_ascii();
